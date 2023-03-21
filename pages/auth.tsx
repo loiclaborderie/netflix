@@ -1,16 +1,39 @@
 /* eslint-disable react/no-unescaped-entities */
 import Input from "@/components/Input";
+import axios from "axios";
 import { useCallback, useState } from "react";
+import { signIn } from "next-auth/react";
+import { redirect } from "next/dist/server/api-utils";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [variant, setVariant] = useState("login");
 
   const toggleVariant = useCallback(() => {
     setVariant((currentVariant) => (currentVariant === "login" ? "register" : "login"));
   }, []);
+
+  const register = useCallback(async () => {
+    try {
+      await axios.post("/api/register", {
+        email,
+        name,
+        password,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, [email, name, password]);
+
+  const login = useCallback(async () => {
+    try {
+      await signIn("credentials", { email, password, redirect: false, callbackUrl: "/" });
+    } catch (error) {
+      console.log(error);
+    }
+  }, [email, password]);
 
   return (
     <div className="relative h-full w-full bg-[url('/images/hero.jpg')] bg-no-repeat bg-center bg-fixed bg-cover">
@@ -23,19 +46,16 @@ const Auth = () => {
             <h2 className="text-white text-4xl mb-8 font-semibold">{variant === "login" ? "Se connecter" : "S'inscrire"}</h2>
             <div className="flex flex-col gap-4">
               {variant === "register" && (
-                <Input
-                  label="Nom d'utilisateur"
-                  onChange={(ev: any) => setUsername(ev.target.value)}
-                  id="username"
-                  type="text"
-                  value={username}
-                ></Input>
+                <Input label="Nom d'utilisateur" onChange={(ev: any) => setName(ev.target.value)} id="name" type="text" value={name}></Input>
               )}
               <Input label="Email" onChange={(ev: any) => setEmail(ev.target.value)} id="email" type="email" value={email}></Input>
               <Input label="Mot de passe" onChange={(ev: any) => setPassword(ev.target.value)} id="password" type="password" value={password}></Input>
             </div>
 
-            <button className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition">
+            <button
+              onClick={variant === "login" ? login : register}
+              className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition"
+            >
               {variant === "login" ? "Se connecter" : "S'inscrire"}
             </button>
             <p className="text-neutral-500 mt-12 text-xs sm:text-base text-center">
