@@ -1,3 +1,4 @@
+import BillBoard from "@/components/BillBoard";
 import Navbar from "@/components/Navbar";
 import { NextPageContext } from "next";
 import { getSession } from "next-auth/react";
@@ -21,6 +22,7 @@ const Home = () => {
   return (
     <>
       <Navbar />
+      <BillBoard />
     </>
   );
 };
