@@ -1,11 +1,17 @@
 import useBillboard from "@/hooks/useBillboard";
-import React from "react";
+import useInfoModal from "@/hooks/useInfoModal";
+import React, { useCallback } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import PlayButton from "./PlayButton";
 
 const BillBoard = () => {
   const { data } = useBillboard();
+  const { openModal } = useInfoModal();
+
   console.log(data);
+  const handleOpenModal = useCallback(() => {
+    openModal(data?.id);
+  }, [openModal, data]);
   return (
     <div className="relative h-[56.25vw]">
       <video className="w-full h-[56.26vw] object-cover brightness-[60%]" poster={data?.thumbnailUrl} autoPlay muted loop src={data?.videoUrl}>
@@ -17,6 +23,7 @@ const BillBoard = () => {
         <div className="flex flex-row items-center mt-3 md:mt-4 gap-3">
           <PlayButton movieId={data?.id} />
           <button
+            onClick={handleOpenModal}
             className="
           bg-white
           text-white 
