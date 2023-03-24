@@ -60,7 +60,7 @@ const Auth = () => {
             >
               {variant === "login" ? "Se connecter" : "S'inscrire"}
             </button>
-            <div className="flex flex-row items-center gap-4 mt-8 justify-center">
+            {/* <div className="flex flex-row items-center gap-4 mt-8 justify-center">
               <div
                 onClick={() => {
                   signIn("google", { callbackUrl: "/profiles" });
@@ -77,7 +77,7 @@ const Auth = () => {
               >
                 <FaGithub size={30} />
               </div>
-            </div>
+            </div> */}
             <p className="text-neutral-500 mt-12 text-xs sm:text-base text-center">
               {variant === "login" ? "Pas de compte ?" : "J'ai déjà un compte ?"}
               <span onClick={toggleVariant} className="text-white ml-1 hover:underline cursor-pointer">
