@@ -32,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if (req.method === "DELETE") {
-      const currentUser = await serverAuth(req);
+      const { currentUser } = await serverAuth(req);
       const { movieId } = req.body;
       const existingMovie = await prismadb.movie.findUnique({
         where: {
@@ -43,13 +43,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         throw new Error("Ce film n'existe pas");
       }
 
+      const updatedFavoriteIds = without(currentUser.favoriteIds, movieId);
+
       const user = await prismadb.user.update({
         where: {
-          email: currentUser.currentUser.email || "",
+          email: currentUser.email || "",
         },
         data: {
           favoriteIds: {
-            set: without(currentUser.currentUser.favoriteIds, movieId),
+            set: updatedFavoriteIds,
           },
         },
       });
